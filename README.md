@@ -3,6 +3,8 @@
 A collection of Python scripts for controlling a Novation Launchpad MK2 via MIDI System Exclusive (SysEx) messages.  
 This project lets you experiment with lighting, text, and effects on your Launchpad, and includes an interactive shell for live control.
 
+![{2B372DE0-F2B2-4C28-8A33-C92C9806DF93}](https://github.com/user-attachments/assets/f488a345-0f55-4240-aef9-58cb05e13d32)
+
 ---
 
 ## Features
