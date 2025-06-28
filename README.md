@@ -1,21 +1,20 @@
 # LaunchpadLEDs
 
-A collection of Python scripts for controlling a Novation Launchpad MK2 via MIDI System Exclusive (SysEx) messages.  
-This project lets you experiment with lighting, text, and effects on your Launchpad, and includes an interactive shell for live control.
-
-![{2B372DE0-F2B2-4C28-8A33-C92C9806DF93}](https://github.com/user-attachments/assets/f488a345-0f55-4240-aef9-58cb05e13d32)
+A modular Python toolkit for controlling a Novation Launchpad MK2 via MIDI System Exclusive (SysEx) messages.  
+Includes an interactive shell, lighting/text/effect scripts, and a REST API for remote or programmatic control.
 
 ---
 
 ## Features
 
-- **Interactive Shell**: Run commands to control lights, display text, switch modes, and more ([sysex_shell.py](sysex_shell.py)).
-- **Lighting Effects**: Set solid colors, pulse, flash, and clear pads.
-- **Text Display**: Scroll custom text across the Launchpad.
-- **Tempo Control**: Send MIDI clock messages to adjust effect tempo.
-- **Raw SysEx**: Send custom SysEx messages for advanced use.
-- **Mode Switching**: Emulate Ableton-style mode switching with visual feedback.
-- **Input Listener**: Monitor and display incoming MIDI messages.
+- **Interactive Shell:** Live control of lights, text, effects, and modes ([sysex_shell.py](sysex_shell.py)).
+- **Lighting Effects:** Set solid colors, pulse, flash, and clear pads.
+- **Text Display:** Scroll custom text across the Launchpad.
+- **Tempo Control:** Send MIDI clock messages to adjust effect tempo.
+- **Raw SysEx:** Send custom SysEx messages for advanced use.
+- **Mode Switching:** Emulate Ableton-style mode switching with visual feedback.
+- **Input Listener:** Monitor and display incoming MIDI messages.
+- **REST API:** Control the Launchpad remotely via HTTP ([api/api.py](api/api.py)).
 
 ---
 
@@ -23,10 +22,12 @@ This project lets you experiment with lighting, text, and effects on your Launch
 
 - Python 3.7+
 - [python-rtmidi](https://pypi.org/project/python-rtmidi/)
+- [FastAPI](https://fastapi.tiangolo.com/) (for API)
+- [Uvicorn](https://www.uvicorn.org/) (for API server)
 
 Install dependencies:
 ```sh
-pip install python-rtmidi
+pip install python-rtmidi fastapi uvicorn
 ```
 
 ---
@@ -35,14 +36,17 @@ pip install python-rtmidi
 
 ```
 .
-├── sysex_shell.py              # Main interactive shell for Launchpad control
+├── launchpad.py               # Launchpad backend class (MIDI/SysEx logic)
+├── sysex_shell.py             # Main interactive shell for Launchpad control
+├── api/
+│   └── api.py                 # FastAPI REST API for remote control
 ├── misc/
-│   ├── lights.py               # Simple script for lighting pads
-│   ├── lights_bpm.py           # Lighting with tempo/BPM control
-│   ├── text.py                 # Script for scrolling text
+│   ├── lights.py              # Simple script for lighting pads
+│   ├── lights_bpm.py          # Lighting with tempo/BPM control
+│   ├── text.py                # Script for scrolling text
 │   ├── launchpad_user1_drumrack.syx   # SysEx dump to switch to drumrack layout
 │   ├── launchpad_user2_session.syx    # SysEx dump to switch to session layout
-│   └── palette.png             # Color palette reference
+│   └── palette.png            # Color palette reference
 ├── README.md
 └── .pylintrc
 ```
@@ -51,15 +55,15 @@ pip install python-rtmidi
 
 ## Usage
 
-### 1. Launch the Interactive Shell
+### 1. Interactive Shell
 
+Start the shell:
 ```sh
 python sysex_shell.py
 ```
+Type `help` for a list of commands.
 
-Type `help` in the shell for a list of commands.
-
-### 2. Run Example Scripts
+### 2. Example Scripts
 
 - Lighting pads:  
   ```sh
@@ -73,6 +77,24 @@ Type `help` in the shell for a list of commands.
   ```sh
   python misc/text.py
   ```
+
+### 3. REST API
+
+Start the API server (from the project root):
+```sh
+uvicorn api.api:app --reload
+```
+
+#### Example: Send a Command via HTTP
+
+```sh
+curl -X POST "http://127.0.0.1:8000/command" -H "Content-Type: application/json" -d "{\"command\": \"solid\", \"args\": [63,0,63]}"
+```
+
+List available commands:
+```sh
+curl http://127.0.0.1:8000/commands
+```
 
 ---
 
@@ -108,6 +130,27 @@ See [Novation Launchpad MK2 Programmer's Reference](https://fael-downloads-prod.
 - `clear` — Turn off all pads
 - `mode user1` — Switch to User 1 mode
 - `tempo 120` — Send MIDI clock at 120 BPM
+
+---
+
+## API Endpoints
+
+- `POST /command` — Execute a shell command.  
+  **Body:**  
+  ```json
+  {
+    "command": "solid",
+    "args": [63, 0, 63]
+  }
+  ```
+- `GET /commands` — List all available commands.
+
+---
+
+## Screenshots
+
+<!-- Place your screenshot in the repo and uncomment below: -->
+<!-- ![LaunchpadLEDs Shell Screenshot](screenshot.png) -->
 
 ---
 
