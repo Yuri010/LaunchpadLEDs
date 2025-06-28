@@ -36,55 +36,70 @@ def send_palette(midi_out, note, color):
         midi_out.send_message(HEADER + [0x0E, color, 0xF7])
 
 
-def main():
-    midi_out = setup_midi()
-    note_input = input("Enter note number(s) to light (comma separated, blank for all): ").strip()
-    color_input = input("Enter RGB values (e.g. 63 0 63) or a single palette value (0-127: ").strip()
+def parse_notes(note_input):
+    if not note_input:
+        return ALL_NOTES
+    try:
+        return [int(n) for n in note_input.split(",") if n.strip()]
+    except ValueError:
+        print("❌ Invalid note number(s).")
+        return None
 
+
+def parse_color(color_input):
     rgb_parts = color_input.split()
-    use_rgb = False
     if len(rgb_parts) == 3:
         try:
             r, g, b = map(int, rgb_parts)
             if all(0 <= v <= 63 for v in (r, g, b)):
-                use_rgb = True
-            else:
-                raise ValueError
+                return ("rgb", (r, g, b))
         except ValueError:
-            print("❌ Invalid RGB values. Please enter three numbers between 0 and 63.")
-            midi_out.close_port()
-            return
-    else:
-        try:
-            color = int(color_input, 16) if color_input.lower().startswith("0x") else int(color_input)
-            if not 0 <= color <= 127:
-                raise ValueError
-        except ValueError:
-            print("❌ Invalid palette value. Enter a number 0-127 or hex 0x00-0x7F.")
-            midi_out.close_port()
-            return
+            pass
+        print("❌ Invalid RGB values. Please enter three numbers between 0 and 63.")
+        return None
+    try:
+        color = int(color_input, 16) if color_input.lower().startswith("0x") else int(color_input)
+        if 0 <= color <= 127:
+            return ("palette", color)
+    except ValueError:
+        pass
+    print("❌ Invalid palette value. Enter a number 0-127 or hex 0x00-0x7F.")
+    return None
 
-    if not note_input:
-        notes = ALL_NOTES
-    else:
-        try:
-            notes = [int(n) for n in note_input.split(",") if n.strip()]
-        except ValueError:
-            print("❌ Invalid note number(s).")
-            midi_out.close_port()
-            return
 
-    if use_rgb:
+def light_notes(midi_out, notes, color_type, color_value):
+    if color_type == "rgb":
+        r, g, b = color_value
         for note in notes:
             send_rgb(midi_out, note, r, g, b)
-    else:
+    elif color_type == "palette":
         if notes == ALL_NOTES:
-            send_palette(midi_out, 0, color)
+            send_palette(midi_out, 0, color_value)
         else:
             for note in notes:
-                send_palette(midi_out, note, color)
+                send_palette(midi_out, note, color_value)
 
-    midi_out.close_port()
+
+def main():
+    midi_out = setup_midi()
+    try:
+        note_input = input("Enter note number(s) to light (comma separated, blank for all): ").strip()
+        color_input = input("Enter RGB values (e.g. 63 0 63) or a single palette value (0-127): ").strip()
+
+        notes = parse_notes(note_input)
+        if notes is None:
+            midi_out.close_port()
+            return
+
+        color = parse_color(color_input)
+        if color is None:
+            midi_out.close_port()
+            return
+
+        color_type, color_value = color
+        light_notes(midi_out, notes, color_type, color_value)
+    finally:
+        midi_out.close_port()
 
 
 if __name__ == "__main__":
