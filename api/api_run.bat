@@ -1,3 +1,5 @@
+@echo off
+title LaunchpadLEDs - API
 cd "%~dp0"
 cd ..
 set PYTHONPATH=%cd%
