@@ -22,7 +22,7 @@ async def execute_command(request: CommandRequest):
             sysex_shell.COMMANDS[command](lp, args)
             return {"status": "success", "message": f"Executed command: {command}", "args": args}
         except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+            raise HTTPException(status_code=500, detail=str(e)) from e
     else:
         raise HTTPException(status_code=400, detail="Unknown command")
 

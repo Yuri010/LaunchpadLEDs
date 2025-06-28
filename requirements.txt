@@ -2,3 +2,4 @@ python-rtmidi
 fastapi
 uvicorn
 pydantic
+requests

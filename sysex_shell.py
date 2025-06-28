@@ -215,7 +215,6 @@ def main():
     except KeyboardInterrupt:
         lp.disconnect()
         print("👋 Exiting...")
-        return
 
 
 if __name__ == "__main__":

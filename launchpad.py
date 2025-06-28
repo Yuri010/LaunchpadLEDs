@@ -1,5 +1,5 @@
-import rtmidi
 import asyncio
+import rtmidi
 
 HEADER = [0xF0, 0x00, 0x20, 0x29, 0x02, 0x18]
 ALL_NOTES = [
