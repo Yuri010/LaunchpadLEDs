@@ -59,9 +59,9 @@ class Launchpad:
     def set_mode(self, mode_name):
         if not mode_name or mode_name not in MODES:
             print(f"❌ Usage: mode <{'|'.join(MODES.keys())}>")
-            return
+            return None
         if mode_name == self.current_mode:
-            return
+            return mode_name
         if self.current_mode:
             self.midi_out.send_message(HEADER + [0x0B, MODES[self.current_mode]["note"], 0, 0, 0, 0xF7])
         self.midi_out.send_message(HEADER + [0x22, MODES[mode_name]["layout"], 0xF7])
