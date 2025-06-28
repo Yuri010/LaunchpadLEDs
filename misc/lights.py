@@ -57,7 +57,7 @@ def main():
     else:
         try:
             color = int(color_input, 16) if color_input.lower().startswith("0x") else int(color_input)
-            if not (0 <= color <= 127):
+            if not 0 <= color <= 127:
                 raise ValueError
         except ValueError:
             print("❌ Invalid palette value. Enter a number 0-127 or hex 0x00-0x7F.")

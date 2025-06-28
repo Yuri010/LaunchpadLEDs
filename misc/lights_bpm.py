@@ -35,7 +35,7 @@ def send_palette_all(midi_out, color):
 
 async def change_tempo(midi_out, tempo, max_messages=None):
     interval = 60 / (tempo * 24)
-    for count in range(max_messages or float('inf')):
+    for _ in range(max_messages or float('inf')):
         midi_out.send_message(HEADER + [0xF8, 0xF7])
         await asyncio.sleep(interval)
 
