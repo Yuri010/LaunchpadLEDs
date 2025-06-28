@@ -5,6 +5,7 @@ import sysex_shell
 
 app = FastAPI()
 lp = Launchpad()
+forbidden_commands = ["help", "send", "sendraw", "reconnect", "consoleclear", "exit", "listenon", "listenoff"]
 
 
 class CommandRequest(BaseModel):
@@ -18,6 +19,8 @@ async def execute_command(request: CommandRequest):
     args = request.args
 
     if command in sysex_shell.COMMANDS:
+        if command in forbidden_commands:
+            raise HTTPException(status_code=403)
         try:
             sysex_shell.COMMANDS[command](lp, args)
             return {"status": "success", "message": f"Executed command: {command}", "args": args}
@@ -29,7 +32,8 @@ async def execute_command(request: CommandRequest):
 
 @app.get("/commands")
 def list_commands():
-    return {"commands": list(sysex_shell.COMMANDS.keys())}
+    allowed_commands = [cmd for cmd in list(sysex_shell.COMMANDS) if cmd not in forbidden_commands]
+    return {"commands": allowed_commands}
 
 
 @app.on_event("startup")
