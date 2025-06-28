@@ -1,16 +1,12 @@
 [MASTER]
 
 # Disable specific warnings:
-#   C0103: invalid-name
 #   C0114: missing-module-docstring
 #   C0115: missing-class-docstring
 #   C0116: missing-function-docstring
-#   C0304: missing-final-newline
-#   E1135: unsupported-membership-test
-#   R1732: consider-using-with
+#   E1101: no-member
 #   W0718: broad-exception-caught
-#   W1113: keyword-arg-before-vararg
-disable=C0103, C0114, C0115, C0116, C0304, E1135, R1732, W0718, W1113
+disable=C0114, C0115, C0116, E1101, W0718
 
 # Maximum line length for the code
 max-line-length=120
