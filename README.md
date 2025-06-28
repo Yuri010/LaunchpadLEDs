@@ -3,6 +3,8 @@
 A modular Python toolkit for controlling a Novation Launchpad MK2 via MIDI System Exclusive (SysEx) messages.  
 Includes an interactive shell, lighting/text/effect scripts, and a REST API for remote or programmatic control.
 
+<img src="https://github.com/user-attachments/assets/f488a345-0f55-4240-aef9-58cb05e13d32" width="50%">
+
 ---
 
 ## Features
@@ -32,6 +34,7 @@ pip install python-rtmidi fastapi uvicorn
 
 ---
 
+<!--
 ## File Tree
 
 ```
@@ -52,6 +55,7 @@ pip install python-rtmidi fastapi uvicorn
 ```
 
 ---
+-->
 
 ## Usage
 
@@ -149,8 +153,8 @@ See [Novation Launchpad MK2 Programmer's Reference](https://fael-downloads-prod.
 
 ## Screenshots
 
-<!-- Place your screenshot in the repo and uncomment below: -->
-<!-- ![LaunchpadLEDs Shell Screenshot](screenshot.png) -->
+<img src="https://github.com/user-attachments/assets/621413a3-b118-4e22-a1c2-ee9f5524e0f6" width="45%">
+<img src="https://github.com/user-attachments/assets/45730f67-da39-4cc0-bed2-0ac8a33ba968" width="45%">
 
 ---
 
